@@ -1,12 +1,15 @@
-name: Engine tests
+name: Build and test
 
 on:
   push:
     branches: ["main"]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
-  test:
+  engine-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -15,4 +18,18 @@ jobs:
           distribution: temurin
           java-version: "17"
       - name: Run pure Kotlin tests
-        run: ./gradlew :core:cards:test :core:canasta:test :core:solitaire:test :core:protocol:test
+        run: sh ./gradlew :core:cards:test :core:canasta:test :core:solitaire:test :core:protocol:test
+
+  android-debug:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: android-actions/setup-android@v3
+      - name: Install Android SDK 37
+        run: sdkmanager "platforms;android-37" "build-tools;37.0.0"
+      - name: Assemble debug application
+        run: sh ./gradlew :app:assembleDebug
