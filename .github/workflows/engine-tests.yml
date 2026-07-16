@@ -49,6 +49,19 @@ jobs:
           set +e
           sh ./gradlew :app:assembleDebug --console=plain --stacktrace 2>&1 | tee android-build.log
           exit ${PIPESTATUS[0]}
+      - name: Package installable APK
+        shell: bash
+        run: |
+          mkdir -p dist
+          cp app/build/outputs/apk/debug/app-debug.apk dist/Card-Royale-Suite-v0.1.0-development.apk
+          sha256sum dist/Card-Royale-Suite-v0.1.0-development.apk > dist/Card-Royale-Suite-v0.1.0-development.apk.sha256
+      - name: Upload installable APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Card-Royale-Suite-v0.1.0-development-apk
+          path: dist/
+          if-no-files-found: error
+          retention-days: 30
       - name: Upload Android diagnostics
         if: always()
         uses: actions/upload-artifact@v4
