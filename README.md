@@ -27,7 +27,7 @@ Online matchmaking, production authentication, WebSockets, persistence, ratings,
 
 1. Clone or download this repository.
 2. Open the repository root in a current Android Studio release.
-3. Install Android SDK 37 if prompted.
+3. Install Android SDK 36 if prompted.
 4. Let Gradle sync.
 5. Run the `app` configuration on an Android 8.0+ device or emulator.
 
