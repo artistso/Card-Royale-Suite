@@ -18,7 +18,17 @@ jobs:
           distribution: temurin
           java-version: "17"
       - name: Run pure Kotlin tests
-        run: sh ./gradlew :core:cards:test :core:canasta:test :core:solitaire:test :core:protocol:test
+        shell: bash
+        run: |
+          set +e
+          sh ./gradlew :core:cards:test :core:canasta:test :core:solitaire:test :core:protocol:test --console=plain --stacktrace 2>&1 | tee engine-tests.log
+          exit ${PIPESTATUS[0]}
+      - name: Upload engine diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: engine-test-log
+          path: engine-tests.log
 
   android-debug:
     runs-on: ubuntu-latest
@@ -34,4 +44,14 @@ jobs:
       - name: Install stable Android SDK platform
         run: sdkmanager "platforms;android-36"
       - name: Assemble debug application
-        run: sh ./gradlew :app:assembleDebug
+        shell: bash
+        run: |
+          set +e
+          sh ./gradlew :app:assembleDebug --console=plain --stacktrace 2>&1 | tee android-build.log
+          exit ${PIPESTATUS[0]}
+      - name: Upload Android diagnostics
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: android-build-log
+          path: android-build.log
