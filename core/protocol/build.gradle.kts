@@ -8,6 +8,8 @@ kotlin {
 }
 
 dependencies {
+    implementation(project(":core:cards"))
+    implementation(project(":core:canasta"))
     implementation(libs.kotlinx.serialization.json)
     testImplementation(libs.junit.jupiter)
     testRuntimeOnly(libs.junit.platform.launcher)
